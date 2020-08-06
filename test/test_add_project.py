@@ -1,14 +1,12 @@
 from model.project import Project
 
 
-def test_add_project(app, orm):
+def test_add_project(app):
     project = Project(name="testname", description="desc")
-    app.session.login("administrator", "root")
-    if Project(name=project.name) in orm.get_existing_project(Project(name=project.name)):
+    if project.name in app.soap.get_existing_project("administrator", "root"):
         app.project.delete_project_by_name(project.name)
-    old_projects = orm.get_project_list()
+    old_projects = app.soap.project_list("administrator", "root")
     app.project.add_project(project)
-    new_projects = orm.get_project_list()
+    new_projects = app.soap.project_list("administrator", "root")
     old_projects.append(project)
     assert old_projects == new_projects
-    app.session.logout()
