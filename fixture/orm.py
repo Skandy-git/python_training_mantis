@@ -1,5 +1,4 @@
 from pony.orm import *
-from datetime import datetime
 from model.project import Project
 
 
@@ -23,7 +22,7 @@ class ORMFixture:
 
     @db_session
     def get_existing_project(self, project):
-        return select(g for g in ORMFixture.ORMProject if g.name == project.name)
+        return self.convert_projects_to_model(select(g for g in ORMFixture.ORMProject if g.name == project.name))
 
     @db_session
     def get_project_list(self):
